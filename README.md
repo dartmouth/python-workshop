@@ -1,54 +1,69 @@
-# gl-gh-migration-script
+## Initial setup
 
+Create the following credentials (details below)
+- GitLab username and access token
+- GitHub username and access token
 
-This is a utility that must be run locally.
+Then save these credentials to a dotenv file
 
-# Requirements
+```sh
+cat << 'EOF' > .env
+gl_username = "rc-github01"
+gh_username = "rc-github01"
+gl_token = "glpat-abcdefghijklmnopqrst"
+gh_token = "ghp_abcdefghijklmnopqrstuvwxyz1234567890"
+EOF
+```
 
-You will need to install the following Python libraries. You can install them with the `pip3` command:
-`csv`
-`request`
-`subprocess`
+Then install the `gh` command line tool and setup your Python virtualenv.
 
-You will need to have `gh` installed: 
-`brew install gh`
+```sh
+brew install gh
 
-You will need a GitLab access token with the following privileges:
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+```
+
+## Prepare for a migration
+
+Activate the virtualenv and then create a batch01.csv
+
+```sh
+source venv/bin/activate
+
+cat << 'EOF' > batch01.csv
+SOURCE_GROUP_NAME,SOURCE_REPO,TARGET_VISIBILITY,TARGET_ORG,TARGET_REPO
+rci,docs,internal,dartmouth-itc,rci-docs
+EOF
+```
+
+## Run the migration
+
+```sh
+./migrate.py batch01.csv
+```
+
+## Notes from the Kemeny Team about creating tokens
+
+You can create your GitLab tokens here: https://git.dartmouth.edu/-/profile/personal_access_tokens. You will need a GitLab access token with the following privileges:
 `api`
 `write_repository`
 `sudo`
 `admin_mode`
 
-You can create your GitLab tokens here: https://git.dartmouth.edu/-/profile/personal_access_tokens
-
-You will need a GitHub personal access token the following privileges:
-`admin:enterprise` 
-`admin:org`
-`admin:org_hook` 
-`admin:repo_hook`
-`codespace`
-`notifications`
-`project`
+You can create your GitHub tokens here: https://github.com/settings/tokens. You will need a GitHub personal access token the following privileges:
 `repo`
-`user`
 `workflow`
-`write:discussion`
 `write:packages`
-
-You can create your GitHub tokens here: https://github.com/access/tokens 
+`admin:org`
+`admin:repo_hook`
+`admin:org_hook`
+`notifications`
+`user`
+`write:discussion`
+`admin:enterprise`
+`codespace`
+`project`
 
 You will need to give your GitHub PAT access to the target org in the GitHub web interface by choosing the org you wish to move repositories to in the dropdown menu titled "Configure SSO" for your token.
-
-Once you have your tokens, you can paste them in as the values for `gl_access_token` and `gh_access_token`. Make sure you DO NOT commit these as they are very powerful and we don't want them floating around!
-
-The script assumes that you are using an IDM0X account to run it. The account name will go in as the `username` variable. If you are not using an IDM0X account, you will have to change line 14.
-
-# How to use the script
-
-To migrate repositories from GitLab, you will list the repos in question in the `batch01.csv` file. You will list them in the format 
-`group,repo`
-with no whitespace after the comma. For example:
-`idm,grouper`.
-The script will create a mirror copy of the repo locally, create a new repo with the same name in GitHub, push the local copy to the new repo, and then copy over the webhooks if there are any.
-
-If you have any questions go to Rodrigo.
