@@ -41,7 +41,20 @@ EOF
 ## Run the migration
 
 ```sh
+# copy from GitLab to GitHub
 ./migrate.py batch01.csv
+
+# in GitHub, grant teams admin access
+./add_repos_to_teams batch01.csv
+
+# in GitLab, archive the repos
+./archive_repo.py batch01.csv
+```
+
+Note: if you are archiving recently created repos, you may need to rebuild the database file that matches projects to id. The following will do that.
+
+```sh
+./archive_repo.py --build_id_file
 ```
 
 ## Notes from the Kemeny Team about creating tokens

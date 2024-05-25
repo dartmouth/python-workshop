@@ -1,2 +1,2 @@
-SOURCE_GROUP_NAME,SOURCE_REPO,TARGET_VISIBILITY,TARGET_ORG,TARGET_REPO
-rci,docs,internal,dartmouth-itc,rci-docs
+SOURCE_GROUP_NAME,SOURCE_REPO,TARGET_VISIBILITY,TARGET_ORG,TARGET_REPO,ADMIN_TEAMS
+rci,docs,internal,dartmouth-itc,rci-docs,"research-cyberinfrastructure:research-software-engineering"

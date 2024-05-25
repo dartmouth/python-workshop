@@ -1,3 +1,4 @@
 requests
 subprocess32
 python-dotenv
+python-gitlab
